@@ -1,5 +1,5 @@
 import amino
-import lumus
+import lumusServer
 import getpass
 
 user = amino.Client()
@@ -56,4 +56,4 @@ while True:
 
     current_iteration.reverse()
     
-    lumus.span_check(current_iteration, count, chat_id, sub_user)
+    lumusServer.span_check(current_iteration, count + 1, chat_id, sub_user)

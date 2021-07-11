@@ -30,3 +30,11 @@ def spam_check(messages, items, chat_id, sub_user):
 
                                     except:
                                         print('Всё нормально, работаем')
+
+def queue_handler(sub_user, queue, chat_id):
+	while True:
+		if queue.qsize() > 4:
+			sub_user.edit_chat(chat_id, viewOnly = True)
+
+		if queue.qsize() < 4:
+			sub_user.edit_chat(chat_id, viewOnly = False)
