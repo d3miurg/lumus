@@ -1,3 +1,4 @@
+print('Соединение с Амино')
 import amino
 import lumusServer
 import getpass
@@ -15,7 +16,7 @@ for i in range(len(comms.name)):
     com_id.append(comms.comId[i])
     print(str(i) + ' ' + comms.name[i])
 
-com_num = int(input())
+com_num = int(input('Номер сообщества: '))
 
 sub_user = amino.SubClient(comId = com_id[com_num], profile = user.profile)
 chats = sub_user.get_chat_threads()
@@ -30,30 +31,38 @@ for i in range(len(chats.title)):
     else:
         print(str(i) + ' ' + chats.title[i])
 
-chat_num = int(input())
+chat_num = int(input('Номер чата: '))
 
 current_chat_id = chat_id[chat_num]
 
+print('Начало работы')
 while True:
-	count = 4
-    new_messages = sub_user.get_chat_messages(current_chat_id, 4)
+    try:
+        count = 4
+        new_messages = sub_user.get_chat_messages(current_chat_id, 4)
 
-    if count != len(new_messages.content):
+        if count != len(new_messages.content):
             count = len(new_messages.content) - 1
 
-    current_iteration = []
+        current_iteration = []
 
-    for t in range(count):
-        first_part = new_messages.author.nickname[t] + ': '
+        for t in range(count):
+            first_part = new_messages.author.nickname[t] + ': '
 
-        if new_messages.content[t] is None:
-            full_message = first_part + 'НЕ ТЕКСТОВОЕ СООБЩЕНИЕ ТИПА ' + str(new_messages.type[t])
+            if new_messages.content[t] is None:
+                full_message = first_part + 'НЕ ТЕКСТОВОЕ СООБЩЕНИЕ ТИПА ' + str(new_messages.type[t])
 
-        else:
-            full_message = first_part + new_messages.content[t]
+            else:
+                full_message = first_part + new_messages.content[t]
 
-        current_iteration.append([full_message, new_messages.author.userId[t], new_messages.messageId[t]])
+            current_iteration.append([full_message, new_messages.author.userId[t], new_messages.messageId[t]])
 
-    current_iteration.reverse()
+        current_iteration.reverse()
     
-    lumusServer.span_check(current_iteration, count + 1, chat_id, sub_user)
+        lumusServer.spam_check(current_iteration, chat_id, sub_user)
+
+    except KeyboardInterrupt:
+        print('Завершение')
+        break
+
+user.logout()
